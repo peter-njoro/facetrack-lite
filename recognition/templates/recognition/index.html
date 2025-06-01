@@ -3,4 +3,10 @@
 <h1>Hey Stalker</h1>
 <h2>Welcome to {{title }}</h2>
 <p>{{ message }}</p>
+
+<button>
+    <a href="{% url 'recognition:enroll' %}">
+        Add a face
+    </a>
+</button>
 {% endblock content %}

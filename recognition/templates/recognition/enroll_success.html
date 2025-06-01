@@ -1,0 +1,9 @@
+{% extends "recognition/base.html" %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>🎉 Face Enrollment Successful!</h2>
+    <p>The face has been registered successfully.</p>
+    <a href="{% url 'recognition:index' %}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock content %}
