@@ -1,0 +1,9 @@
+{% extends "recognition/base.html" %}
+{% block title %}Live Face Recognition{% endblock title %}
+
+{% block content %}
+
+<h2>Live Face Recognition</h2>
+<img src="{% url 'recognition:live_feed' %}" width="720" height="540" />
+
+{% endblock content %}
