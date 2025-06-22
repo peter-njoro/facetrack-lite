@@ -1,4 +1,5 @@
 {% extends "recognition/base.html" %}
+{% block title %}Home{% endblock title %}
 {% block content %}
 <h1>Hey Stalker</h1>
 <h2>Welcome to {{title }}</h2>
@@ -9,6 +10,14 @@
         Add a face
     </a>
 </button>
-<img src="{% url 'recognition:video_feed' %}" width="640" height="480" />
+<!-- <button>
+    <a href="{% url 'recognition:face_detection' %}">
+        Face Detection
+    </a>
+</button> -->
+<button>
+    <a href="{% url 'recognition:live_face_page' %}">
+        Live Recognition
+    </a>
 </button>
 {% endblock content %}

@@ -1,8 +1,9 @@
 {% extends "recognition/base.html" %}
+{% block title %}Face Detection{% endblock title %}
 
 {% block content %}
 <div class="container text-center mt-5">
     <h2>Live Face Detection</h2>
-    <img src="{% url 'video_feed' %}" width="640" height="480" />
+    <img src="{% url 'recognition:video_feed' %}" width="640" height="480" />
 </div>
 {% endblock %}
