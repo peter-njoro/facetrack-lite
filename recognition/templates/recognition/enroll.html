@@ -2,12 +2,11 @@
 {% block title %}Enroll{% endblock title %}
 
 {% block content %}
-
-<h1>Enroll Student</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Enroll</button>
+    <label>Upload face images:</label>
+    <input type="file" name="face_images" multiple required>
+    <button type="submit">Enroll Student</button>
 </form>
-
 {% endblock content %}
