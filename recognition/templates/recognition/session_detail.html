@@ -1,0 +1,72 @@
+{% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Session Detail{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2>{{ session.subject }}</h2>
+  <p><strong>Started by:</strong> {{ session.created_by.username }}</p>
+  <p><strong>Start time:</strong> {{ session.start_time }}</p>
+  <p><strong>Status:</strong> {{ session.get_status_display }}</p>
+  {% if session.notes %}
+    <p><strong>Notes:</strong> {{ session.notes }}</p>
+  {% endif %}
+
+  <hr>
+
+  <h4>Present Students ({{ present_students|length }})</h4>
+  {% if present_students %}
+    <ul class="list-group mb-3">
+      {% for student in present_students %}
+        <li class="list-group-item">{{ student.full_name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No students recognized yet.</p>
+  {% endif %}
+
+  <h4>Absent Students ({{ absent_students|length }})</h4>
+  {% if absent_students %}
+    <ul class="list-group mb-3">
+      {% for student in absent_students %}
+        <li class="list-group-item">{{ student.full_name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No absent students (or no roster).</p>
+  {% endif %}
+
+  <h4>Unidentified Faces ({{ unidentified_faces|length }})</h4>
+  {% if unidentified_faces %}
+    <div class="row mb-3">
+      {% for face in unidentified_faces %}
+        <div class="col-md-2">
+          <img src="{% static face.image_path %}" class="img-thumbnail" alt="Unknown face">
+          <small class="d-block text-muted">{{ face.timestamp }}</small>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No unidentified faces captured.</p>
+  {% endif %}
+
+  <h4>Session Events ({{ events|length }})</h4>
+  {% if events %}
+    <ul class="list-group">
+      {% for event in events %}
+        <li class="list-group-item">
+          <span class="badge bg-secondary">{{ event.level }}</span>
+          {{ event.message }}<br>
+          <small class="text-muted">{{ event.timestamp }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No events logged.</p>
+  {% endif %}
+
+</div>
+{% endblock content %}
