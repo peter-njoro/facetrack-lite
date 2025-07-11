@@ -1,12 +1,14 @@
 {% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+
 {% block title %}Enroll{% endblock title %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% bootstrap_form form %}
     <label>Upload face images:</label>
     <input type="file" name="face_images" multiple required>
-    <button type="submit">Enroll Student</button>
+    {% bootstrap_button button_type="submit" content="Enroll Student" %}
 </form>
 {% endblock content %}
