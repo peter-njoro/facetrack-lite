@@ -1,6 +1,23 @@
 {% extends "recognition/base.html" %}
+{% block title %}Home{% endblock title %}
 {% block content %}
 <h1>Hey Stalker</h1>
 <h2>Welcome to {{title }}</h2>
 <p>{{ message }}</p>
+
+<button>
+    <a href="{% url 'recognition:enroll' %}">
+        Add a face
+    </a>
+</button>
+<!-- <button>
+    <a href="{% url 'recognition:face_detection' %}">
+        Face Detection
+    </a>
+</button> -->
+<button>
+    <a href="{% url 'recognition:live_face_page' %}">
+        Live Recognition
+    </a>
+</button>
 {% endblock content %}
