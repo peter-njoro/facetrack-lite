@@ -5,23 +5,24 @@
 {% block title %}Session Detail{% endblock title %}
 
 {% block content %}
+{% if session.status != 'ended' %}
 <form method="post" action="{% url 'recognition:start_recognition' session.id %}">
   {% csrf_token %}
-  <button type="submit" class="btn btn-primary">Start Recognition</button>
+  <button type="submit" class="btn btn-success">Start Recognition</button>
 </form>
 <form method="post" action="{% url 'recognition:start_recognition' session.id %}?dev=1">
   {% csrf_token %}
   <button type="submit" class="btn btn-primary">Start Recognition (Dev Mode)</button>
 </form>
 
-{% if session.status != 'ended' %}
 <form method="post" action="{% url 'recognition:end_session' session.id %}">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">End Session</button>
 </form>
 {% else %}
-<p class="text-muted">This session has ended at {{ session.end_time }}</p>
+<p class="text-muted">Session ended at {{ session.end_time }}</p>
 {% endif %}
+
 
 
 <div class="container mt-4">
