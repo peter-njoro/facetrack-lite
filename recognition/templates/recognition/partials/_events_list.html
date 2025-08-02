@@ -1,0 +1,10 @@
+<ul class="list-group">
+  {% for event in events %}
+  <li class="list-group-item">
+    <strong>{{ event.get_event_type_display }}</strong> - {{ event.timestamp|time:"H:i:s" }}<br>
+    {{ event.message }}
+  </li>
+  {% empty %}
+  <li class="list-group-item text-muted">No events yet.</li>
+  {% endfor %}
+</ul>

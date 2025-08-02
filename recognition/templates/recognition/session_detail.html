@@ -5,6 +5,45 @@
 {% block title %}Session Detail{% endblock title %}
 
 {% block content %}
+{% if session.status != 'ended' %}
+<form method="post" action="{% url 'recognition:start_recognition' session.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-success">Start Recognition</button>
+</form>
+<form method="post" action="{% url 'recognition:start_recognition' session.id %}?dev=1">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Start Recognition (Dev Mode)</button>
+</form>
+
+<form method="post" action="{% url 'recognition:end_session' session.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">End Session</button>
+</form>
+{% else %}
+<p class="text-muted">Session ended at {{ session.end_time }}</p>
+{% endif %}
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Recognition Progress</h5>
+    <p>
+      Recognized students:
+      <strong><span id="present-count">0</span> / <span id="total-expected">0</span></strong><br>
+      Unknown faces captured:
+      <strong><span id="unknown-count">0</span></strong>
+    </p>
+
+    <div class="progress">
+      <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="100">
+        0%
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="container mt-4">
 
   <h2>{{ session.subject }}</h2>
@@ -12,61 +51,64 @@
   <p><strong>Start time:</strong> {{ session.start_time }}</p>
   <p><strong>Status:</strong> {{ session.get_status_display }}</p>
   {% if session.notes %}
-    <p><strong>Notes:</strong> {{ session.notes }}</p>
+  <p><strong>Notes:</strong> {{ session.notes }}</p>
   {% endif %}
 
   <hr>
 
-  <h4>Present Students ({{ present_students|length }})</h4>
-  {% if present_students %}
-    <ul class="list-group mb-3">
-      {% for student in present_students %}
-        <li class="list-group-item">{{ student.full_name }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No students recognized yet.</p>
-  {% endif %}
+  <h4>Present Students</h4>
+  <div id="present-panel" hx-get="{% url 'recognition:session_present_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_present_students.html' %}
+  </div>
 
-  <h4>Absent Students ({{ absent_students|length }})</h4>
-  {% if absent_students %}
-    <ul class="list-group mb-3">
-      {% for student in absent_students %}
-        <li class="list-group-item">{{ student.full_name }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No absent students (or no roster).</p>
-  {% endif %}
 
-  <h4>Unidentified Faces ({{ unidentified_faces|length }})</h4>
-  {% if unidentified_faces %}
-    <div class="row mb-3">
-      {% for face in unidentified_faces %}
-        <div class="col-md-2">
-          <img src="{% static face.image_path %}" class="img-thumbnail" alt="Unknown face">
-          <small class="d-block text-muted">{{ face.timestamp }}</small>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="text-muted">No unidentified faces captured.</p>
-  {% endif %}
+  <h4>Absent Students</h4>
+  <div id="absent-panel" hx-get="{% url 'recognition:session_absent_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_absent_students.html' %}
+  </div>
 
-  <h4>Session Events ({{ events|length }})</h4>
-  {% if events %}
-    <ul class="list-group">
-      {% for event in events %}
-        <li class="list-group-item">
-          <span class="badge bg-secondary">{{ event.level }}</span>
-          {{ event.message }}<br>
-          <small class="text-muted">{{ event.timestamp }}</small>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No events logged.</p>
-  {% endif %}
+
+  <h4>Unidentified Faces</h4>
+  <div id="unidentified-panel" hx-get="{% url 'recognition:session_unidentified_partial' session.id %}"
+    hx-trigger="every 5s" hx-swap="innerHTML">
+    {% include 'recognition/partials/_unidentified_faces.html' %}
+  </div>
+
+
+  <h4>Session Events</h4>
+  <div id="events-panel" hx-get="{% url 'recognition:session_events_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_events_list.html' %}
+  </div>
+
 
 </div>
+
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+  function fetchProgress() {
+    fetch("{% url 'recognition:recognition_progress_partial' session.id %}")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('present-count').innerText = data.present_count;
+        document.getElementById('total-expected').innerText = data.total_expected;
+        document.getElementById('unknown-count').innerText = data.unknown_count;
+
+        let percent = data.total_expected > 0
+          ? Math.round((data.present_count / data.total_expected) * 100)
+          : 0;
+
+        let bar = document.getElementById('progress-bar');
+        bar.style.width = percent + '%';
+        bar.setAttribute('aria-valuenow', percent);
+        bar.innerText = percent + '%';
+      })
+      .catch(error => console.error('Error fetching progress:', error));
+  }
+
+  fetchProgress();
+  setInterval(fetchProgress, 3000);
+</script>
 {% endblock content %}

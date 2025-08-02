@@ -1,0 +1,12 @@
+{% load static %}
+
+<div class="row">
+  {% for face in unidentified_faces %}
+  <div class="col-md-2">
+    <img src="{% static face.image_path %}" class="img-thumbnail" alt="Unknown face">
+    <small class="d-block text-muted">{{ face.timestamp|time:"H:i:s" }}</small>
+  </div>
+  {% empty %}
+  <p class="text-muted">No unidentified faces captured.</p>
+  {% endfor %}
+</div>
