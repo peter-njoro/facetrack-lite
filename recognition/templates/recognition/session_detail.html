@@ -1,0 +1,114 @@
+{% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Session Detail{% endblock title %}
+
+{% block content %}
+{% if session.status != 'ended' %}
+<form method="post" action="{% url 'recognition:start_recognition' session.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-success">Start Recognition</button>
+</form>
+<form method="post" action="{% url 'recognition:start_recognition' session.id %}?dev=1">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Start Recognition (Dev Mode)</button>
+</form>
+
+<form method="post" action="{% url 'recognition:end_session' session.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">End Session</button>
+</form>
+{% else %}
+<p class="text-muted">Session ended at {{ session.end_time }}</p>
+{% endif %}
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Recognition Progress</h5>
+    <p>
+      Recognized students:
+      <strong><span id="present-count">0</span> / <span id="total-expected">0</span></strong><br>
+      Unknown faces captured:
+      <strong><span id="unknown-count">0</span></strong>
+    </p>
+
+    <div class="progress">
+      <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="100">
+        0%
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container mt-4">
+
+  <h2>{{ session.subject }}</h2>
+  <p><strong>Started by:</strong> {{ session.created_by.username }}</p>
+  <p><strong>Start time:</strong> {{ session.start_time }}</p>
+  <p><strong>Status:</strong> {{ session.get_status_display }}</p>
+  {% if session.notes %}
+  <p><strong>Notes:</strong> {{ session.notes }}</p>
+  {% endif %}
+
+  <hr>
+
+  <h4>Present Students</h4>
+  <div id="present-panel" hx-get="{% url 'recognition:session_present_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_present_students.html' %}
+  </div>
+
+
+  <h4>Absent Students</h4>
+  <div id="absent-panel" hx-get="{% url 'recognition:session_absent_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_absent_students.html' %}
+  </div>
+
+
+  <h4>Unidentified Faces</h4>
+  <div id="unidentified-panel" hx-get="{% url 'recognition:session_unidentified_partial' session.id %}"
+    hx-trigger="every 5s" hx-swap="innerHTML">
+    {% include 'recognition/partials/_unidentified_faces.html' %}
+  </div>
+
+
+  <h4>Session Events</h4>
+  <div id="events-panel" hx-get="{% url 'recognition:session_events_partial' session.id %}" hx-trigger="every 5s"
+    hx-swap="innerHTML">
+    {% include 'recognition/partials/_events_list.html' %}
+  </div>
+
+
+</div>
+
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+  function fetchProgress() {
+    fetch("{% url 'recognition:recognition_progress_partial' session.id %}")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('present-count').innerText = data.present_count;
+        document.getElementById('total-expected').innerText = data.total_expected;
+        document.getElementById('unknown-count').innerText = data.unknown_count;
+
+        let percent = data.total_expected > 0
+          ? Math.round((data.present_count / data.total_expected) * 100)
+          : 0;
+
+        let bar = document.getElementById('progress-bar');
+        bar.style.width = percent + '%';
+        bar.setAttribute('aria-valuenow', percent);
+        bar.innerText = percent + '%';
+      })
+      .catch(error => console.error('Error fetching progress:', error));
+  }
+
+  fetchProgress();
+  setInterval(fetchProgress, 3000);
+</script>
+{% endblock content %}

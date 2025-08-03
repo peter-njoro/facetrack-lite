@@ -1,0 +1,7 @@
+<ul class="list-group">
+  {% for student in present_students %}
+  <li class="list-group-item">{{ student.full_name }}</li>
+  {% empty %}
+  <li class="list-group-item text-muted">No students marked present yet.</li>
+  {% endfor %}
+</ul>
