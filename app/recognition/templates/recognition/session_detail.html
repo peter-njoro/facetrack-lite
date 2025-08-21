@@ -87,28 +87,9 @@
 </div>
 
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script src="{% static 'recognition/js/session_detail.js' %}"></script>
 <script>
-  function fetchProgress() {
-    fetch("{% url 'recognition:recognition_progress_partial' session.id %}")
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('present-count').innerText = data.present_count;
-        document.getElementById('total-expected').innerText = data.total_expected;
-        document.getElementById('unknown-count').innerText = data.unknown_count;
-
-        let percent = data.total_expected > 0
-          ? Math.round((data.present_count / data.total_expected) * 100)
-          : 0;
-
-        let bar = document.getElementById('progress-bar');
-        bar.style.width = percent + '%';
-        bar.setAttribute('aria-valuenow', percent);
-        bar.innerText = percent + '%';
-      })
-      .catch(error => console.error('Error fetching progress:', error));
-  }
-
-  fetchProgress();
-  setInterval(fetchProgress, 3000);
+  // Pass the progress URL to JS
+  window.RECOGNITION_PROGRESS_URL = "{% url 'recognition:recognition_progress_partial' session.id %}";
 </script>
 {% endblock content %}

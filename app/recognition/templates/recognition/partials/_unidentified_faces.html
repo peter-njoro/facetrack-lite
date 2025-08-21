@@ -1,14 +1,42 @@
+{% load static %}
+
 <div class="row">
   {% for face in unidentified_faces %}
-  <div class="col-md-2">
-    {% if face.image %}
-      <img src="{{ face.image.url }}" class="img-thumbnail" alt="Unknown face">
-    {% else %}
-      <p class="text-muted">No image available</p>
-    {% endif %}
-    <small class="d-block text-muted">{{ face.timestamp|time:"H:i:s" }}</small>
+  <div class="col-md-3 mb-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <!-- Toggle Button -->
+        <div class="btn-group btn-group-sm mb-2" role="group">
+          <button type="button" class="btn btn-outline-primary active" 
+                  onclick="toggleView('face-{{ forloop.counter }}', 'cropped')">
+            Face
+          </button>
+          <button type="button" class="btn btn-outline-primary" 
+                  onclick="toggleView('face-{{ forloop.counter }}', 'full')">
+            Context
+          </button>
+        </div>
+        
+        <!-- Images -->
+        <div id="face-{{ forloop.counter }}">
+          {% if face.cropped_face %}
+            <img src="{{ face.cropped_face.url }}" class="img-fluid rounded show-view" 
+                 data-view="cropped" alt="Cropped face" style="max-height: 150px;">
+          {% endif %}
+          {% if face.full_frame %}
+            <img src="{{ face.full_frame.url }}" class="img-fluid rounded hide-view" 
+                 data-view="full" alt="Full frame" style="max-height: 150px;">
+          {% endif %}
+        </div>
+        
+        <small class="d-block text-muted mt-2">
+          {{ face.timestamp|time:"H:i:s" }}
+        </small>
+      </div>
+    </div>
   </div>
-  {% empty %}
-  <p class="text-muted">No unidentified faces captured.</p>
   {% endfor %}
 </div>
+
+<link rel="stylesheet" href="{% static 'recognition/css/unidentified_faces.css' %}">
+<script src="{% static 'recognition/js/unidentified_faces.js' %}"></script>
