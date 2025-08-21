@@ -1,0 +1,14 @@
+{% extends "recognition/base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Profile</h2>
+  <p><strong>Username:</strong> {{ user.username }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Full Name:</strong> {{ user.full_name }}</p>
+  <p><strong>Role:</strong>
+    {% if user.is_student %} Student {% elif user.is_teacher %} Teacher {% else %} General {% endif %}
+  </p>
+
+  <a class="btn btn-warning" href="{% url 'logout' %}">Logout</a>
+</div>
+{% endblock %}

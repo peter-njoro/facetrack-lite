@@ -1,0 +1,53 @@
+{% extends "recognition/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block title %}Session History{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📚 Session History</h2>
+    <a href="{% url 'recognition:start_session' %}">Start Session</a>
+
+    <table class="table table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+                <tr>
+                    <td>{{ session.subject }}</td>
+                    <td>
+                        {% if session.status == "active" %}
+                            <span class="badge bg-success">Active</span>
+                        {% elif session.status == "ended" %}
+                            <span class="badge bg-secondary">Ended</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ session.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ session.start_time|date:"Y-m-d H:i" }}</td>
+                    <td>{{ session.end_time|default:"In Progress" }}</td>
+                    <td>
+                        <a href="{% url 'recognition:session_detail' session.id %}" class="btn btn-sm btn-primary">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No sessions available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

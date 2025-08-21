@@ -11,6 +11,21 @@
     {% bootstrap_messages %}
 </head>
 <body>
+    <nav>
+        <div class="container">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recognition:index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recognition:enroll' %}">Enroll</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recognition:sessions_list' %}">Session History</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     {% block content %}{% endblock content %}
 </body>
 </html>
