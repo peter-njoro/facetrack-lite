@@ -1,12 +1,39 @@
 {% extends "recognition/base.html" %}
-
+{% load django_bootstrap5 %}
+{% load static %}
 {% block title %}Session Start{% endblock %}
 
 {% block content %}
-<h2>Start New Session</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Start Session</button>
-</form>
+<div class="container mt-5 text-center">
+    <!-- Title with unnecessary enthusiasm -->
+    <h2 class="fw-bold mb-3">🚀 Launching a New Session</h2>
+    <p class="text-muted">
+        Basically, this is where you pretend you’re in charge and click buttons like a boss.
+        Attendance about to be monitored harder than FBI watching your search history 👀.
+    </p>
+
+    <!-- Form Card -->
+    <div class="card shadow-lg p-4 rounded-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3 text-start">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-2">
+                Start Session ✅
+            </button>
+            <small class="text-muted d-block mt-2">
+                (Warning: Once started, the system will recognize faces faster than your grandma spotting you not eating
+                enough at dinner.)
+            </small>
+
+        </form>
+    </div>
+
+    <!-- Back home option -->
+    <a href="{% url 'recognition:index' %}" class="btn btn-link mt-3">
+        ← Take me back before I regret this
+    </a>
+</div>
 {% endblock content %}

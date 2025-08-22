@@ -1,12 +1,25 @@
 {% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Login Portal 🚪{% endblock title %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-success">Login</button>
-  </form>
-  <p class="mt-3">No account? <a href="{% url 'users:signup' %}">Sign up</a></p>
+<div class="container login-container">
+  <div class="login-card">
+    <h2 class="login-title">🔑 Login</h2>
+    <p class="login-subtitle">Prove you’re worthy... or just type your password correctly 🤷‍♂️</p>
+
+    <form method="post" class="login-form">
+      {% csrf_token %}
+      {% bootstrap_form form layout="vertical" %}
+      <button class="btn btn-login">🚀 Enter the Matrix</button>
+    </form>
+
+    <p class="signup-text mt-3">
+      No account? <a href="{% url 'users:signup' %}" class="signup-link">Create one</a><br>
+      <span class="signup-note">(we pinky promise not to sell your data... probably)</span>
+    </p>
+  </div>
 </div>
 {% endblock %}

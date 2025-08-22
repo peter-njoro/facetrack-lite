@@ -1,16 +1,32 @@
 {% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-<h1>Hey Man!</h1>
-<h2>Welcome to {{title }}</h2>
-<p>{{ message }}</p>
 
-<button>
-    <a href="{% url 'recognition:enroll' %}">
-        enroll
-    </a>
-</button>
-<button>
-    <a href="{% url 'recognition:sessions_list' %}">Sessions</a>
-</button>
+<div class="text-center home-hero">
+    <!-- Big friendly welcome -->
+    <h1 class="display-4 fw-bold mb-3">Hey guy, girl, or whoever you are 👀</h1>
+    <h2 class="fw-semibold mb-4">Welcome to {{ title }}</h2>
+    <p class="lead mb-5">{{ message }}</p>
+
+    <!-- Buttons with Bootstrap styling -->
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'recognition:enroll' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Enroll
+        </a>
+        <a href="{% url 'recognition:sessions_list' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-clock-history"></i> Sessions
+        </a>
+    </div>
+</div>
+
+<!-- Sarcastic footer text -->
+<div class="text-center mt-5 goofy-note">
+    <p class="text-muted">
+        🚀 Disclaimer: If this site breaks, it’s not a bug... it’s a <em>feature</em>.  
+        Also, yes, pressing these buttons might change your life. Or not. Who knows.
+    </p>
+</div>
+
 {% endblock content %}

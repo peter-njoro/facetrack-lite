@@ -1,12 +1,31 @@
 {% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Sign Up 🚀{% endblock title %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>Sign Up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary">Sign Up</button>
-  </form>
-  <p class="mt-3">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+<div class="container signup-container">
+  <div class="signup-card">
+    <h2 class="signup-title">🚀 Create Account</h2>
+    <p class="signup-subtitle">Join the squad — we promise it’s cooler inside 😎</p>
+
+    <form method="post" class="signup-form">
+      {% csrf_token %}
+      {% bootstrap_form form layout="vertical" %}
+
+      <small class="text-muted d-block mb-3">
+        Passwords are like your favorite snack 🌮 — make them strong, spicy, and memorable!
+      </small>
+
+      <button class="btn btn-signup">✨ Sign Me Up</button>
+    </form>
+
+    <p class="login-text">
+      Already have an account? <a href="{% url 'users:login' %}" class="login-link">Login</a><br>
+      <span class="login-note">(we’ll pretend you didn’t forget your password last time)</span>
+    </p>
+  </div>
 </div>
+
 {% endblock %}
