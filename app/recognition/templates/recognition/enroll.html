@@ -1,5 +1,6 @@
 {% extends "recognition/base.html" %}
 {% load django_bootstrap5 %}
+{% load static %}
 
 {% block title %}Enroll{% endblock title %}
 
@@ -11,4 +12,9 @@
     <input type="file" name="face_images" multiple required>
     {% bootstrap_button button_type="submit" content="Enroll Student" %}
 </form>
+
+<link rel="stylesheet" href="{% static 'recognition/css/enroll_loading.css' %}">
+<script src="{% static 'recognition/js/enroll_loading.js' %}"></script>
+
 {% endblock content %}
+
