@@ -7,8 +7,13 @@
 <div class="text-center home-hero">
     <!-- Big friendly welcome -->
     <h1 class="display-4 fw-bold mb-3">Hey guy, girl, or whoever you are 👀</h1>
-    <h2 class="fw-semibold mb-4">Welcome to {{ title }}</h2>
-    <p class="lead mb-5">{{ message }}</p>
+    <h2 class="fw-semibold mb-4">
+        {% blocktrans with page_title=title %}Welcome to {{ page_title }}{% endblocktrans %}
+    </h2>
+
+    <p class="lead mb-5">
+        {% blocktrans with msg=message %}{{ msg }}{% endblocktrans %}
+    </p>
 
     <!-- Buttons with Bootstrap styling -->
     <div class="d-flex justify-content-center gap-3">
@@ -24,7 +29,7 @@
 <!-- Sarcastic footer text -->
 <div class="text-center mt-5 goofy-note">
     <p class="text-muted">
-        🚀 Disclaimer: If this site breaks, it’s not a bug... it’s a <em>feature</em>.  
+        🚀 Disclaimer: If this site breaks, it’s not a bug... it’s a <em>feature</em>.
         Also, yes, pressing these buttons might change your life. Or not. Who knows.
     </p>
 </div>
