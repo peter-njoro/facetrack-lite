@@ -9,6 +9,6 @@
     {% if user.is_student %} Student {% elif user.is_teacher %} Teacher {% else %} General {% endif %}
   </p>
 
-  <a class="btn btn-warning" href="{% url 'logout' %}">Logout</a>
+  <a class="btn btn-warning" href="{% url 'users:logout' %}">Logout</a>
 </div>
 {% endblock %}

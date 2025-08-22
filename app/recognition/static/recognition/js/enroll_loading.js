@@ -29,24 +29,39 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(loader);
 
     let pollInterval = null;
+    let fakeProgress = 0;
+    let fakeMax = Math.floor(Math.random() * 30) + 60; // Random stop between 60-90%
 
     form.addEventListener('submit', function () {
         loader.style.display = 'flex';
+        fakeProgress = 0;
+        fakeMax = Math.floor(Math.random() * 30) + 60;
 
-        // Start polling progress
+        // Start fake progress
+        const progressBar = document.getElementById('enroll-progress-bar');
+        let fakeInterval = setInterval(function () {
+            if (fakeProgress < fakeMax) {
+                fakeProgress += Math.floor(Math.random() * 3) + 1; // Increment by 1-3%
+                if (fakeProgress > fakeMax) fakeProgress = fakeMax;
+                progressBar.style.width = fakeProgress + '%';
+                progressBar.innerText = fakeProgress + '%';
+                progressBar.setAttribute('aria-valuenow', fakeProgress);
+            }
+        }, 300);
+
+        // Start polling backend for real completion
         pollInterval = setInterval(function () {
             fetch('/enroll/progress/')
                 .then(response => response.json())
                 .then(data => {
-                    const progressBar = document.getElementById('enroll-progress-bar');
-                    let progress = data.progress || 0;
-                    progressBar.style.width = progress + '%';
-                    progressBar.innerText = progress + '%';
-                    progressBar.setAttribute('aria-valuenow', progress);
-                    if (progress >= 100) {
+                    if (data.progress >= 100) {
                         clearInterval(pollInterval);
+                        clearInterval(fakeInterval);
+                        progressBar.style.width = '100%';
+                        progressBar.innerText = '100%';
+                        progressBar.setAttribute('aria-valuenow', 100);
                     }
                 });
-        }, 400);
+        }, 500);
     });
 });
