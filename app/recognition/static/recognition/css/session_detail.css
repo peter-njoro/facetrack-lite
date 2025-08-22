@@ -1,0 +1,35 @@
+/* Custom styles for session detail */
+.session-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.events-container {
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 #f8f9fa;
+}
+
+.events-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-container::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.events-container::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 3px;
+}
+
+.card-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.badge {
+    font-size: 0.8rem;
+}

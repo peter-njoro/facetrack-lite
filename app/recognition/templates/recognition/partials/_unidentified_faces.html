@@ -1,42 +1,32 @@
-{% load static %}
-
-<div class="row">
-  {% for face in unidentified_faces %}
-  <div class="col-md-3 mb-3">
-    <div class="card">
-      <div class="card-body text-center">
-        <!-- Toggle Button -->
-        <div class="btn-group btn-group-sm mb-2" role="group">
-          <button type="button" class="btn btn-outline-primary active" 
-                  onclick="toggleView('face-{{ forloop.counter }}', 'cropped')">
-            Face
-          </button>
-          <button type="button" class="btn btn-outline-primary" 
-                  onclick="toggleView('face-{{ forloop.counter }}', 'full')">
-            Context
-          </button>
+<!-- recognition/templates/recognition/partials/_unidentified_faces.html -->
+<div style="max-height: 400px; overflow-y: auto;">
+    {% if unidentified_faces %}
+    <div class="row">
+        {% for face in unidentified_faces %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Unknown Face #{{ forloop.counter }}</h6>
+                    <div class="mb-2">
+                        <img src="{{ face.cropped_face.url }}" alt="Unknown face" class="img-fluid rounded" style="max-height: 150px;">
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted">Detected: {{ face.detected_at|timesince }} ago</small>
+                    </div>
+                    {% if face.full_frame %}
+                    <a href="{{ face.full_frame.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-expand"></i> View Full Frame
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        
-        <!-- Images -->
-        <div id="face-{{ forloop.counter }}">
-          {% if face.cropped_face %}
-            <img src="{{ face.cropped_face.url }}" class="img-fluid rounded show-view" 
-                 data-view="cropped" alt="Cropped face" style="max-height: 150px;">
-          {% endif %}
-          {% if face.full_frame %}
-            <img src="{{ face.full_frame.url }}" class="img-fluid rounded hide-view" 
-                 data-view="full" alt="Full frame" style="max-height: 150px;">
-          {% endif %}
-        </div>
-        
-        <small class="d-block text-muted mt-2">
-          {{ face.timestamp|time:"H:i:s" }}
-        </small>
-      </div>
+        {% endfor %}
     </div>
-  </div>
-  {% endfor %}
+    {% else %}
+    <div class="text-center text-muted py-4">
+        <i class="fas fa-question-circle fa-3x mb-2"></i>
+        <p>No unknown faces detected</p>
+    </div>
+    {% endif %}
 </div>
-
-<link rel="stylesheet" href="{% static 'recognition/css/unidentified_faces.css' %}">
-<script src="{% static 'recognition/js/unidentified_faces.js' %}"></script>
