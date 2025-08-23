@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loader.style.alignItems = 'center';
     loader.innerHTML = `
         <div style="text-align:center; min-width:300px;">
-            <div style="margin-bottom:1rem;font-size:1.2rem;">Processing images, please wait...</div>
+            <div style="margin-bottom:1rem;font-size:1.2rem;">Processing images, just chill😎...</div>
             <div class="progress" style="height: 2rem;">
                 <div id="enroll-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
                     role="progressbar" style="width: 0%; font-size:1.1rem;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
