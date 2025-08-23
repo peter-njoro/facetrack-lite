@@ -1,0 +1,41 @@
+{% extends "recognition/base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Your Profile 😎{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body text-center">
+      <h2 class="card-title mb-4">👤 Your Profile (a.k.a your "government name" zone)</h2>
+
+      <p class="fs-5"><strong>Username:</strong> {{ user.username }}  
+        <span class="text-muted">— wow, creative 👏</span>
+      </p>
+
+      <p class="fs-5"><strong>Email:</strong> {{ user.email }}  
+        <span class="text-muted">— totally not used for spam. Promise. 🤥</span>
+      </p>
+
+      <p class="fs-5"><strong>Full Name:</strong> {{ user.full_name }}  
+        <span class="text-muted">— the name your mom yells when she’s mad.</span>
+      </p>
+
+      <p class="fs-5"><strong>Role:</strong>
+        {% if user.is_student %}
+          🎓 Student <span class="text-muted">— professional assignment avoider</span>
+        {% elif user.is_teacher %}
+          🍎 Teacher <span class="text-muted">— caffeine is your blood type</span>
+        {% else %}
+          🌍 General <span class="text-muted">— just here for the vibes</span>
+        {% endif %}
+      </p>
+
+      <a class="btn btn-warning btn-lg mt-4 shadow-sm" href="{% url 'users:logout' %}">
+        🚪 Logout (rage quit)
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
