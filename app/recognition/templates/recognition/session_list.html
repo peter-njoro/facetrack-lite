@@ -105,7 +105,7 @@
                             <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-calendar-x fs-1 mb-3"></i>
                                 <p>No sessions found... wow, productivity at 0% 💀</p>
-                                <a href="{% url 'recognition:start_session_view' %}" class="btn btn-primary">
+                                <a href="{% url 'recognition:create_session_view' %}" class="btn btn-primary">
                                     <i class="bi bi-plus-circle"></i> Create First Session
                                 </a>
                             </td>
@@ -141,7 +141,13 @@
                                 <small class="text-muted">Started: {{ info.started_at|timesince }} ago</small>
                             </p>
                             <div class="mt-2">
-                                <a href="{% url 'recognition:session_detail' session_id=session.id %}"
+                                {% if session.id %}
+   				 <a href="{% url 'recognition:session_detail' session_id=session.id %}"
+       				class="btn btn-sm btn-outline-primary me-2">
+       					<i class="bi bi-eye"></i> Monitor
+    				</a>
+				{% endif %}
+
                                    class="btn btn-sm btn-outline-primary me-2">
                                     <i class="bi bi-eye"></i> Monitor
                                 </a>
