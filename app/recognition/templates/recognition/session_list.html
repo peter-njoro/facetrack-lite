@@ -1,0 +1,169 @@
+{% extends 'recognition/base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Sessions List{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4 sessions-list">
+    <!-- Header with sarcasm -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold">📅 Sessions</h1>
+        <a href="{% url 'recognition:create_session_view' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Session
+        </a>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Sessions Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Subject</th>
+                            <th>Class Group</th>
+                            <th>Status</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Created By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                        <tr>
+                            <td>
+                                <strong>{{ session.subject }}</strong>
+                                {% if session.id|stringformat:"s" in active_session_info %}
+                                <span class="badge bg-warning ms-2">Active</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if session.class_group %}
+                                {{ session.class_group.name }}
+                                {% else %}
+                                <span class="text-muted">None (ouch)</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if session.status == 'ongoing' %}bg-success
+                                    {% elif session.status == 'ended' %}bg-secondary
+                                    {% else %}bg-info{% endif %}">
+                                    {{ session.status|title }}
+                                </span>
+                            </td>
+                            <td>{{ session.start_time|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% if session.end_time %}
+                                {{ session.end_time|date:"M d, Y H:i" }}
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ session.created_by.get_full_name|default:session.created_by.username }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'recognition:session_detail' session_id=session.id %}"
+                                       class="btn btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+
+                                    {% if session.status == 'ready' or session.status == 'ended' %}
+                                    <a href="{% url 'recognition:start_session' session_id=session.id %}"
+                                       class="btn btn-success">
+                                        <i class="bi bi-play-fill"></i> Start
+                                    </a>
+                                    <a href="{% url 'recognition:start_session' session_id=session.id %}?dev=1"
+                                       class="btn btn-warning">
+                                        <i class="bi bi-flask"></i> Dev
+                                    </a>
+                                    {% elif session.status == 'ongoing' %}
+                                    <a href="{% url 'recognition:end_session' session_id=session.id %}"
+                                       class="btn btn-danger">
+                                        <i class="bi bi-stop-fill"></i> Stop
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="bi bi-calendar-x fs-1 mb-3"></i>
+                                <p>No sessions found... wow, productivity at 0% 💀</p>
+                                <a href="{% url 'recognition:create_session_view' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Create First Session
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Sessions Panel -->
+    {% if active_session_info %}
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-warning text-dark fw-semibold">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Active Recognition Sessions (aka currently watching your face 👁️)
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for info in active_session_info %}
+                {% with session=info.session %}
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold">
+                                Session: {{ session.subject }}
+                                <span class="badge bg-{% if info.mode == 'dev' %}warning{% else %}success{% endif %} float-end">
+                                    {{ info.mode|upper }} MODE
+                                </span>
+                            </h6>
+                            <p class="card-text mb-1">
+                                <small class="text-muted">Started: {{ info.started_at|timesince }} ago</small>
+                            </p>
+                            <div class="mt-2">
+                                {% if session.id %}
+   				 <a href="{% url 'recognition:session_detail' session_id=session.id %}"
+       				class="btn btn-sm btn-outline-primary me-2">
+       					<i class="bi bi-eye"></i> Monitor
+    				</a>
+				{% endif %}
+
+                                   class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="bi bi-eye"></i> Monitor
+                                </a>
+                                <a href="{% url 'recognition:end_session' session_id=session.id %}"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-stop-fill"></i> Stop
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "recognition/base.html" %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+
+<div class="text-center home-hero">
+    <!-- Big friendly welcome -->
+    <h1 class="display-4 fw-bold mb-3">Hey guy, girl, or whoever you are 👀</h1>
+    <h2 class="fw-semibold mb-4">
+        {% blocktrans with page_title=title %}Welcome to {{ page_title }}{% endblocktrans %}
+    </h2>
+
+    <p class="lead mb-5">
+        {% blocktrans with msg=message %}{{ msg }}{% endblocktrans %}
+    </p>
+
+    <!-- Buttons with Bootstrap styling -->
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'recognition:enroll' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Enroll
+        </a>
+        <a href="{% url 'recognition:sessions_list' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-clock-history"></i> Sessions
+        </a>
+    </div>
+</div>
+
+<!-- Sarcastic footer text -->
+<div class="text-center mt-5 goofy-note">
+    <p class="text-muted">
+        🚀 Disclaimer: If this site breaks, it’s not a bug... it’s a <em>feature</em>.
+        Also, yes, pressing these buttons might change your life. Or not. Who knows.
+    </p>
+</div>
+
+{% endblock content %}

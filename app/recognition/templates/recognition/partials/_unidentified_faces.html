@@ -1,0 +1,64 @@
+<!-- recognition/templates/recognition/partials/_unidentified_faces.html -->
+<div style="max-height: 400px; overflow-y: auto;">
+    {% if unidentified_faces %}
+    <div class="row">
+        {% for face in unidentified_faces %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body" id="face-container-{{ face.id }}">
+                    <h6 class="card-title">Unknown Face #{{ forloop.counter }}</h6>
+
+                    <div class="mb-2">
+                        {% if face.cropped_face %}
+                        <!-- Cropped face view -->
+                        <img src="{{ face.cropped_face.url }}" 
+                             alt="Cropped unknown face" 
+                             class="img-fluid rounded show-view"
+                             style="max-height: 150px;"
+                             data-view="cropped">
+                        {% else %}
+                        <div class="text-muted small">No cropped face available</div>
+                        {% endif %}
+
+                        {% if face.full_frame %}
+                        <!-- Full frame view (hidden by default) -->
+                        <img src="{{ face.full_frame.url }}" 
+                             alt="Full frame unknown face" 
+                             class="img-fluid rounded hide-view mt-2"
+                             style="max-height: 200px;"
+                             data-view="full">
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            Detected: {{ face.timestamp|timesince }} ago
+                        </small>
+                    </div>
+
+                    <div class="btn-group btn-group-sm" role="group">
+                        {% if face.cropped_face %}
+                        <button class="btn btn-outline-primary"
+                                onclick="toggleView('face-container-{{ face.id }}', 'cropped')">
+                            <i class="bi bi-person-circle"></i> Cropped
+                        </button>
+                        {% endif %}
+                        {% if face.full_frame %}
+                        <button class="btn btn-outline-secondary"
+                                onclick="toggleView('face-container-{{ face.id }}', 'full')">
+                            <i class="bi bi-arrows-fullscreen"></i> Full
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center text-muted py-4">
+        <i class="fas fa-question-circle fa-3x mb-2"></i>
+        <p>No unknown faces detected</p>
+    </div>
+    {% endif %}
+</div>
